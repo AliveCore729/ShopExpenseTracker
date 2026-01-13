@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- LOGOUT -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_gravity="end" />
+
+    <!-- SHOP BALANCE -->
+    <TextView
+        android:id="@+id/tvShopBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="₹ 0"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Balance Left in Shop"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- IN / OUT / HISTORY -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="IN" />
+
+        <Button
+            android:id="@+id/btnOut"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="OUT" />
+
+        <Button
+            android:id="@+id/btnMainTransactions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="History" />
+    </LinearLayout>
+
+    <!-- 🔥 ADD PERSONAL EXPENSE (NEW) -->
+    <Button
+        android:id="@+id/btnAddPersonalExpense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Personal Expense"
+        android:layout_marginTop="16dp" />
+
+    <!-- USERS HEADER -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Users"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp" />
+
+    <!-- USERS LIST -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
