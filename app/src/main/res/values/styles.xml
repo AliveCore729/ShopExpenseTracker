@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ActionCircleButton" parent="Widget.Material3.Button">
+        <!-- Shape -->
+        <item name="cornerRadius">52dp</item>
+
+        <!-- VERY IMPORTANT -->
+        <item name="android:background">@drawable/circle_white</item>
+        <item name="backgroundTint">@null</item>
+
+        <!-- FORCE ICON -->
+        <item name="iconGravity">textTop</item>
+        <item name="iconPadding">6dp</item>
+        <item name="iconSize">22dp</item>
+        <item name="iconTint">#0F172A</item>
+
+        <!-- THIS LINE FIXES IT -->
+        <item name="android:drawablePadding">6dp</item>
+
+        <!-- TEXT -->
+        <item name="android:textColor">#0F172A</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+
+        <!-- REMOVE MATERIAL INSETS -->
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+    </style>
+    <style name="KeypadButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:background">@drawable/bg_keypad_button</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#0F172A</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+</resources>
