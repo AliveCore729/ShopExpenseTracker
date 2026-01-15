@@ -21,13 +21,15 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var tvShopBalance: TextView
     private lateinit var rvUsers: androidx.recyclerview.widget.RecyclerView
+
+    // ✅ NEW BUTTON ADDED HERE
+    private lateinit var btnAddBalance: Button
     private lateinit var btnIn: Button
     private lateinit var btnOut: Button
     private lateinit var btnMainTransactions: Button
     private lateinit var btnLogout: Button
     private lateinit var btnAddPersonalExpense: Button
 
-    // ✅ New Header Views
     private lateinit var tvHeaderName: TextView
     private lateinit var tvAvatarInitial: TextView
 
@@ -41,29 +43,27 @@ class HomeActivity : AppCompatActivity() {
         // Initialize Views
         tvShopBalance = findViewById(R.id.tvShopBalance)
         rvUsers = findViewById(R.id.rvUsers)
+
+        // ✅ NEW BUTTON INITIALIZATION
+        btnAddBalance = findViewById(R.id.btnAddBalance)
+
         btnIn = findViewById(R.id.btnIn)
         btnOut = findViewById(R.id.btnOut)
         btnMainTransactions = findViewById(R.id.btnMainTransactions)
         btnLogout = findViewById(R.id.btnLogout)
         btnAddPersonalExpense = findViewById(R.id.btnAddPersonalExpense)
 
-        // ✅ Initialize Header Views
         tvHeaderName = findViewById(R.id.tvHeaderName)
         tvAvatarInitial = findViewById(R.id.tvAvatarInitial)
 
-        // ✅ FETCH CURRENT USER NAME FOR HEADER
+        // FETCH USER DETAILS
         val userId = auth.currentUser?.uid
         if (userId != null) {
             db.collection("users").document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        // Get the name (default to "User" if empty)
                         val fullName = document.getString("name") ?: "User"
-
-                        // Update the Greeting
                         tvHeaderName.text = "Hi, $fullName!"
-
-                        // Update the Avatar Circle (First Letter)
                         if (fullName.isNotEmpty()) {
                             tvAvatarInitial.text = fullName.first().toString().uppercase()
                         }
@@ -79,7 +79,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Setup Layout Manager (Grid - 2 Columns)
         rvUsers.layoutManager = GridLayoutManager(this, 2)
         rvUsers.adapter = adapter
 
@@ -87,7 +86,11 @@ class HomeActivity : AppCompatActivity() {
         loadShopBalance()
         loadUsers()
 
-        // Button Actions
+        // ✅ NEW BUTTON ACTION
+        btnAddBalance.setOnClickListener {
+            showAmountDialog("DEPOSIT")
+        }
+
         btnIn.setOnClickListener {
             showAmountDialog("IN")
         }
@@ -112,7 +115,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // 🔹 UPDATED: Custom Dialog Implementation
+    // 🔹 UPDATED: Handles IN, OUT, and DEPOSIT
     private fun showAmountDialog(type: String) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_transaction_amount, null)
 
@@ -128,16 +131,26 @@ class HomeActivity : AppCompatActivity() {
         val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnConfirm)
         val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
 
-        if (type == "IN") {
-            tvTitle.text = "Money IN"
-            tvSubtitle.text = "Add money to shop balance"
-            btnConfirm.text = "Add Money"
-            btnConfirm.setBackgroundColor(Color.parseColor("#2E7D32")) // Green
-        } else {
-            tvTitle.text = "Money OUT"
-            tvSubtitle.text = "Take money from shop balance"
-            btnConfirm.text = "Withdraw"
-            btnConfirm.setBackgroundColor(Color.parseColor("#D32F2F")) // Red
+        // Customize UI based on Type
+        when (type) {
+            "IN" -> {
+                tvTitle.text = "Money IN"
+                tvSubtitle.text = "Transfer from You -> Shop"
+                btnConfirm.text = "Transfer"
+                btnConfirm.setBackgroundColor(Color.parseColor("#2E7D32")) // Green
+            }
+            "OUT" -> {
+                tvTitle.text = "Money OUT"
+                tvSubtitle.text = "Withdraw from Shop -> You"
+                btnConfirm.text = "Withdraw"
+                btnConfirm.setBackgroundColor(Color.parseColor("#D32F2F")) // Red
+            }
+            "DEPOSIT" -> { // ✅ NEW CASE
+                tvTitle.text = "Add Balance"
+                tvSubtitle.text = "Add external funds to Shop"
+                btnConfirm.text = "Add Funds"
+                btnConfirm.setBackgroundColor(Color.parseColor("#8200FF")) // Purple
+            }
         }
 
         btnConfirm.setOnClickListener {
@@ -157,7 +170,7 @@ class HomeActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    // 🔥 SHOP IN / OUT LOGIC
+    // 🔥 UPDATED LOGIC FOR TRANSACTIONS
     private fun processInOut(type: String, amount: Long) {
         val firebaseUser = auth.currentUser ?: return
         val userId = firebaseUser.uid
@@ -174,26 +187,40 @@ class HomeActivity : AppCompatActivity() {
             val userBalance = userSnap.getLong("balance") ?: 0
             val userName = userSnap.getString("name") ?: "Unknown"
 
-            val newShopBalance: Long
-            val newUserBalance: Long
+            var newShopBalance = shopBalance
+            var newUserBalance = userBalance
 
-            if (type == "IN") {
-                if (userBalance < amount) {
-                    throw Exception("You have insufficient balance")
+            // Logic Switch
+            when (type) {
+                "IN" -> {
+                    if (userBalance < amount) {
+                        throw Exception("You have insufficient balance")
+                    }
+                    newShopBalance = shopBalance + amount
+                    newUserBalance = userBalance - amount
                 }
-                newShopBalance = shopBalance + amount
-                newUserBalance = userBalance - amount
-            } else {
-                if (shopBalance < amount) {
-                    throw Exception("Shop has insufficient balance")
+                "OUT" -> {
+                    if (shopBalance < amount) {
+                        throw Exception("Shop has insufficient balance")
+                    }
+                    newShopBalance = shopBalance - amount
+                    newUserBalance = userBalance + amount
                 }
-                newShopBalance = shopBalance - amount
-                newUserBalance = userBalance + amount
+                "DEPOSIT" -> {
+                    // ✅ External Money: Only Shop increases. User stays same.
+                    newShopBalance = shopBalance + amount
+                }
             }
 
+            // Write Updates
             transaction.update(shopRef, "balance", newShopBalance)
-            transaction.update(userRef, "balance", newUserBalance)
 
+            // Only update user balance if it was IN or OUT
+            if (type != "DEPOSIT") {
+                transaction.update(userRef, "balance", newUserBalance)
+            }
+
+            // Create Transaction Record
             val data = hashMapOf(
                 "userId" to userId,
                 "userName" to userName,
@@ -204,7 +231,7 @@ class HomeActivity : AppCompatActivity() {
 
             transaction.set(txnRef, data)
         }.addOnSuccessListener {
-            toast("$type successful")
+            toast("Transaction Successful")
         }.addOnFailureListener {
             toast(it.message ?: "Transaction failed")
         }

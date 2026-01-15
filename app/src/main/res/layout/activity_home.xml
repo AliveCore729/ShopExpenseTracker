@@ -155,6 +155,39 @@
                         android:orientation="vertical">
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddBalance"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetLeft="0dp"
+                            android:insetRight="0dp"
+                            app:cornerRadius="32dp"
+                            app:icon="@android:drawable/ic_input_add"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconTint="#374151"
+                            android:backgroundTint="#FFFFFF"
+                            app:strokeWidth="0dp"
+                            app:elevation="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="12dp"
+                            android:textColor="#0F172A"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnIn"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -169,14 +202,15 @@
                             app:iconTint="#374151"
                             android:backgroundTint="#FFFFFF"
                             app:strokeWidth="0dp"
-                            app:elevation="4dp"/> <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="IN"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="12dp"
-                        android:textColor="#0F172A"/>
+                            app:elevation="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="IN"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="12dp"
+                            android:textColor="#0F172A"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -202,7 +236,6 @@
                             android:backgroundTint="#FFFFFF"
                             app:strokeWidth="0dp"
                             app:elevation="4dp"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -236,7 +269,6 @@
                             android:backgroundTint="#FFFFFF"
                             app:strokeWidth="0dp"
                             app:elevation="4dp"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -246,6 +278,7 @@
                             android:layout_marginTop="12dp"
                             android:textColor="#0F172A"/>
                     </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
