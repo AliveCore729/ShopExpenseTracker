@@ -2,10 +2,14 @@ package com.shop.expensetracker
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,7 +25,11 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var btnOut: Button
     private lateinit var btnMainTransactions: Button
     private lateinit var btnLogout: Button
-    private lateinit var btnAddPersonalExpense: Button   // ✅ NEW
+    private lateinit var btnAddPersonalExpense: Button
+
+    // ✅ New Header Views
+    private lateinit var tvHeaderName: TextView
+    private lateinit var tvAvatarInitial: TextView
 
     private val userList = mutableListOf<User>()
     private lateinit var adapter: UserAdapter
@@ -30,14 +38,40 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // Initialize Views
         tvShopBalance = findViewById(R.id.tvShopBalance)
         rvUsers = findViewById(R.id.rvUsers)
         btnIn = findViewById(R.id.btnIn)
         btnOut = findViewById(R.id.btnOut)
         btnMainTransactions = findViewById(R.id.btnMainTransactions)
         btnLogout = findViewById(R.id.btnLogout)
-        btnAddPersonalExpense = findViewById(R.id.btnAddPersonalExpense) // ✅
+        btnAddPersonalExpense = findViewById(R.id.btnAddPersonalExpense)
 
+        // ✅ Initialize Header Views
+        tvHeaderName = findViewById(R.id.tvHeaderName)
+        tvAvatarInitial = findViewById(R.id.tvAvatarInitial)
+
+        // ✅ FETCH CURRENT USER NAME FOR HEADER
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("users").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        // Get the name (default to "User" if empty)
+                        val fullName = document.getString("name") ?: "User"
+
+                        // Update the Greeting
+                        tvHeaderName.text = "Hi, $fullName!"
+
+                        // Update the Avatar Circle (First Letter)
+                        if (fullName.isNotEmpty()) {
+                            tvAvatarInitial.text = fullName.first().toString().uppercase()
+                        }
+                    }
+                }
+        }
+
+        // Setup Adapter
         adapter = UserAdapter(userList) { user ->
             val intent = Intent(this, UserDetailActivity::class.java)
             intent.putExtra("userId", user.id)
@@ -45,12 +79,15 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        rvUsers.layoutManager = LinearLayoutManager(this)
+        // Setup Layout Manager (Grid - 2 Columns)
+        rvUsers.layoutManager = GridLayoutManager(this, 2)
         rvUsers.adapter = adapter
 
+        // Load Data
         loadShopBalance()
         loadUsers()
 
+        // Button Actions
         btnIn.setOnClickListener {
             showAmountDialog("IN")
         }
@@ -63,45 +100,64 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, MainTransactionsActivity::class.java))
         }
 
-        // ✅ ADD PERSONAL EXPENSE
         btnAddPersonalExpense.setOnClickListener {
-            startActivity(
-                Intent(this, AddPersonalExpenseActivity::class.java)
-            )
+            startActivity(Intent(this, AddPersonalExpenseActivity::class.java))
         }
 
-        // ✅ LOGOUT FIXED
         btnLogout.setOnClickListener {
             auth.signOut()
             val intent = Intent(this, LoginActivity::class.java)
-            intent.flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }
 
-    // 🔹 Amount input dialog
+    // 🔹 UPDATED: Custom Dialog Implementation
     private fun showAmountDialog(type: String) {
-        val input = EditText(this)
-        input.inputType = android.text.InputType.TYPE_CLASS_NUMBER
-        input.hint = "Enter amount"
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_transaction_amount, null)
 
-        AlertDialog.Builder(this)
-            .setTitle("$type Money")
-            .setView(input)
-            .setPositiveButton("Confirm") { _, _ ->
-                val amountText = input.text.toString()
-                if (amountText.isEmpty()) {
-                    toast("Enter amount")
-                    return@setPositiveButton
-                }
-                processInOut(type, amountText.toLong())
+        val builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+        val dialog = builder.create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
+        val tvSubtitle = dialogView.findViewById<TextView>(R.id.tvDialogSubtitle)
+        val etAmount = dialogView.findViewById<EditText>(R.id.etDialogAmount)
+        val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnConfirm)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
+
+        if (type == "IN") {
+            tvTitle.text = "Money IN"
+            tvSubtitle.text = "Add money to shop balance"
+            btnConfirm.text = "Add Money"
+            btnConfirm.setBackgroundColor(Color.parseColor("#2E7D32")) // Green
+        } else {
+            tvTitle.text = "Money OUT"
+            tvSubtitle.text = "Take money from shop balance"
+            btnConfirm.text = "Withdraw"
+            btnConfirm.setBackgroundColor(Color.parseColor("#D32F2F")) // Red
+        }
+
+        btnConfirm.setOnClickListener {
+            val amountText = etAmount.text.toString()
+            if (amountText.isEmpty()) {
+                Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            .setNegativeButton("Cancel", null)
-            .show()
+            processInOut(type, amountText.toLong())
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
-    // 🔥 SHOP IN / OUT
+    // 🔥 SHOP IN / OUT LOGIC
     private fun processInOut(type: String, amount: Long) {
         val firebaseUser = auth.currentUser ?: return
         val userId = firebaseUser.uid

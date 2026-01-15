@@ -36,10 +36,13 @@ class UserTransactionAdapter(
         holder.tvAmount.text = "$sign₹${txn.amount}"
 
         // Color coding
-        holder.tvAmount.setTextColor(
-            if (txn.isCredit) Color.parseColor("#2E7D32") // Green
-            else Color.parseColor("#C62828")               // Red
-        )
+        if (txn.isCredit) {
+            // IN / Credit -> GREEN
+            holder.tvAmount.setTextColor(Color.parseColor("#2E7D32"))
+        } else {
+            // OUT / Debit -> RED
+            holder.tvAmount.setTextColor(Color.parseColor("#D32F2F"))
+        }
 
         // Timestamp
         if (txn.timestamp != null) {

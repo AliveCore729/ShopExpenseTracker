@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView // ✅ Changed Import
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +27,8 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val btnGoogleLogin = findViewById<SignInButton>(R.id.btnGoogleLogin)
+        // ✅ UPDATED: Find the CardView, not SignInButton
+        val btnGoogleLogin = findViewById<CardView>(R.id.cardGoogleLogin)
 
         // Google Sign-In config
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -37,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Google login button
+        // Google login button click
         btnGoogleLogin.setOnClickListener {
             startActivityForResult(
                 googleSignInClient.signInIntent,
@@ -98,5 +99,4 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
 }

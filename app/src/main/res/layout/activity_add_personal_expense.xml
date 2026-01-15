@@ -1,38 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#EFF7EE"
     android:padding="24dp">
 
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#0F172A" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Personal Expense"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#0F172A"
+            android:gravity="center"
+            android:layout_marginEnd="48dp"/>
+    </LinearLayout>
+
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/tvAmount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Personal Expense"
-        android:textSize="22sp"
+        android:text="₹0"
+        android:textSize="64sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"/>
+        android:textColor="#0F172A"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/etAmount"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardReason"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Amount"
-        android:inputType="number"
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="56dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAmount">
 
-    <EditText
-        android:id="@+id/etReason"
+        <EditText
+            android:id="@+id/etReason"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="What is this for?"
+            android:textColorHint="#94A3B8"
+            android:textColor="#0F172A"
+            android:textSize="16sp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp"
+            android:inputType="textCapSentences"
+            android:gravity="center_vertical"/>
+    </androidx.cardview.widget.CardView>
+
+    <GridLayout
+        android:id="@+id/gridLayoutKeypad"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Reason"
-        android:layout_marginBottom="24dp"/>
+        android:layout_height="0dp"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:alignmentMode="alignMargins"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/cardReason"
+        app:layout_constraintBottom_toTopOf="@id/btnSave">
 
-    <Button
+        <Button style="@style/KeypadButton" android:text="1" android:tag="1"/>
+        <Button style="@style/KeypadButton" android:text="2" android:tag="2"/>
+        <Button style="@style/KeypadButton" android:text="3" android:tag="3"/>
+
+        <Button style="@style/KeypadButton" android:text="4" android:tag="4"/>
+        <Button style="@style/KeypadButton" android:text="5" android:tag="5"/>
+        <Button style="@style/KeypadButton" android:text="6" android:tag="6"/>
+
+        <Button style="@style/KeypadButton" android:text="7" android:tag="7"/>
+        <Button style="@style/KeypadButton" android:text="8" android:tag="8"/>
+        <Button style="@style/KeypadButton" android:text="9" android:tag="9"/>
+
+        <Button style="@style/KeypadButton" android:text="." android:tag="."/>
+        <Button style="@style/KeypadButton" android:text="0" android:tag="0"/>
+
+        <ImageButton
+            android:id="@+id/btnBackspace"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="6dp"
+            android:background="@drawable/bg_keypad_button"
+            android:src="@android:drawable/ic_input_delete"
+            app:tint="#0F172A"/>
+    </GridLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Expense"/>
+        android:layout_height="64dp"
+        android:text="Save Expense"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#0F172A"
+        app:cornerRadius="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
