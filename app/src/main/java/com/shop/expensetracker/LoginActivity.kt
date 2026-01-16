@@ -16,7 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
-    // ⚠️ REPLACE THIS WITH YOUR REAL GMAIL ADDRESS
     private val BOSS_EMAIL = "joker72096@gmail.com"
 
     private lateinit var auth: FirebaseAuth
@@ -33,7 +32,6 @@ class LoginActivity : AppCompatActivity() {
 
         val btnGoogleLogin = findViewById<CardView>(R.id.cardGoogleLogin)
 
-        // Google Sign-In config
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -60,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         val user = auth.currentUser
                         if (user != null) {
-                            // 🔥 STEP 1: Check Security Clearance
                             checkWhitelistAndProceed(user)
                         }
                     }
@@ -74,24 +71,19 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // 🔒 THE SECURITY GATEKEEPER
     private fun checkWhitelistAndProceed(user: FirebaseUser) {
         val email = user.email ?: ""
 
-        // 1. Always allow the Boss
         if (email == BOSS_EMAIL) {
             checkUserRegistration(user)
             return
         }
 
-        // 2. Check if email is in 'whitelisted_users' collection
         db.collection("whitelisted_users").document(email).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    // ✅ Access Granted
                     checkUserRegistration(user)
                 } else {
-                    // ⛔ Access Denied
                     performLogout()
                     Toast.makeText(this, "Access Denied: You are not authorized.", Toast.LENGTH_LONG).show()
                 }
@@ -102,34 +94,55 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    // ⛔ Helper to kick unauthorized users out
     private fun performLogout() {
         auth.signOut()
-        googleSignInClient.signOut() // Clears the Google account selection so they can try another
+        googleSignInClient.signOut()
     }
 
-    // 🏠 EXISTING LOGIC: Route to Home or Name Setup
+    // ✅ UPDATED: Added a final check to see if the user profile still exists
     private fun checkUserRegistration(user: FirebaseUser) {
         db.collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    // User already set up -> Go to Home
+                    // User is valid and exists in DB
                     startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 } else {
-                    // New user -> Go to Name Setup
-                    startActivity(Intent(this, GoogleNameActivity::class.java))
+                    // NEW user (or a user whose DB profile was deleted)
+                    // We only send them to Name Setup if they are whitelisted or Boss
+                    val email = user.email ?: ""
+
+                    // Re-check whitelist for safety before allowing Name Setup
+                    db.collection("whitelisted_users").document(email).get().addOnSuccessListener { whiteDoc ->
+                        if (whiteDoc.exists() || email == BOSS_EMAIL) {
+                            startActivity(Intent(this, GoogleNameActivity::class.java))
+                            finish()
+                        } else {
+                            performLogout()
+                            Toast.makeText(this, "Your account profile was removed.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-                finish()
             }
     }
 
-    // ✅ AUTO LOGIN (Optional: You can add checks here too if you want strictly secure startups)
+    // ✅ UPDATED: Auto-login now verifies if the account is still in the DB
     override fun onStart() {
         super.onStart()
-        if (auth.currentUser != null) {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+        val user = auth.currentUser
+        if (user != null) {
+            // Don't just go to HomeActivity; verify they still exist in DB first
+            db.collection("users").document(user.uid).get().addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // If DB record is gone, force log out
+                    performLogout()
+                }
+            }
         }
     }
 }
