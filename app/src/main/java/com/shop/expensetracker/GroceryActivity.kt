@@ -91,19 +91,39 @@ class GroceryActivity : AppCompatActivity() {
     }
 
     private fun showAddItemDialog() {
-        val input = EditText(this)
-        input.hint = "Item name"
-        input.setPadding(50, 50, 50, 50)
+        // Inflate the custom layout
+        val dialogView = android.view.LayoutInflater.from(this).inflate(R.layout.dialog_add_grocery, null)
 
-        AlertDialog.Builder(this)
-            .setTitle("Add Item")
-            .setView(input)
-            .setPositiveButton("Add") { _, _ ->
-                val text = input.text.toString().trim()
-                if (text.isNotEmpty()) addItemToFirestore(text)
+        val builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+        val dialog = builder.create()
+
+        // Transparent background so rounded corners show correctly
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        // Initialize Views
+        val etItem = dialogView.findViewById<EditText>(R.id.etGroceryItem)
+        val btnCancel = dialogView.findViewById<android.widget.Button>(R.id.btnCancel)
+        val btnAdd = dialogView.findViewById<android.widget.Button>(R.id.btnAdd)
+
+        // Focus the input field automatically (Optional UX improvement)
+        etItem.requestFocus()
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnAdd.setOnClickListener {
+            val text = etItem.text.toString().trim()
+            if (text.isNotEmpty()) {
+                addItemToFirestore(text)
+                dialog.dismiss()
+            } else {
+                android.widget.Toast.makeText(this, "Please enter an item name", android.widget.Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Cancel", null)
-            .show()
+        }
+
+        dialog.show()
     }
 
     private fun addItemToFirestore(name: String) {
