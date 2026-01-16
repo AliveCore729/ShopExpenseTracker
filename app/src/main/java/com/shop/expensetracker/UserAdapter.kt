@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class UserAdapter(
     private val users: List<User>,
-    private val onClick: (User) -> Unit
+    private val onClick: (User) -> Unit,
+    private val onLongClick: (User) -> Unit // ✅ Added this parameter
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,8 +28,15 @@ class UserAdapter(
         holder.tvName.text = user.name
         holder.tvBalance.text = "₹${user.balance}"
 
+        // Normal Click (View Details)
         holder.itemView.setOnClickListener {
             onClick(user)
+        }
+
+        // ✅ Long Click (Delete User)
+        holder.itemView.setOnLongClickListener {
+            onLongClick(user)
+            true // Return true to indicate the click was handled
         }
     }
 

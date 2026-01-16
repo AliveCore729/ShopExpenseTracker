@@ -8,42 +8,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopExpenseTracker">
-
+        <activity
+            android:name=".GroceryActivity"
+            android:exported="false" />
         <!-- LOGIN (ENTRY POINT) -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- GOOGLE NAME (FIRST LOGIN ONLY) -->
+        </activity> <!-- GOOGLE NAME (FIRST LOGIN ONLY) -->
         <activity
             android:name=".GoogleNameActivity"
-            android:exported="false" />
-
-        <!-- HOME (MAIN DASHBOARD) -->
+            android:exported="false" /> <!-- HOME (MAIN DASHBOARD) -->
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
-
-        <!-- USER DETAIL + HISTORY + TRANSFER -->
+            android:exported="false" /> <!-- USER DETAIL + HISTORY + TRANSFER -->
         <activity
             android:name=".UserDetailActivity"
-            android:exported="false" />
-
-        <!-- PERSONAL EXPENSE -->
+            android:exported="false" /> <!-- PERSONAL EXPENSE -->
         <activity
             android:name=".AddPersonalExpenseActivity"
-            android:exported="false" />
-
-        <!-- SHOP TRANSACTION HISTORY -->
+            android:exported="false" /> <!-- SHOP TRANSACTION HISTORY -->
         <activity
             android:name=".MainTransactionsActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

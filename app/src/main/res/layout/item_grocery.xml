@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGroceryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#0F172A"
+                android:fontFamily="@font/poppins_medium"/>
+
+            <TextView
+                android:id="@+id/tvAddedBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Added by..."
+                android:textSize="12sp"
+                android:textColor="#64748B"
+                android:fontFamily="@font/poppins_regular"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivDone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/shape_circle_unchecked"
+            android:clickable="true"
+            android:focusable="false"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

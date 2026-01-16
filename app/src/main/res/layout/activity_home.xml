@@ -6,316 +6,351 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFF7EE"
-    android:fitsSystemWindows="true"> <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:fillViewport="true"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:paddingBottom="100dp">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFD6C9">
-                <TextView
-                    android:id="@+id/tvAvatarInitial"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="L"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textColor="#BF360C"/>
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Welcome back,"
-                    android:textSize="12sp"
-                    android:textColor="#6B7280" />
-
-                <TextView
-                    android:id="@+id/tvHeaderName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hi, Leandro!"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#0F172A" />
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:insetLeft="0dp"
-                android:insetRight="0dp"
-                app:icon="@android:drawable/ic_lock_power_off"
-                app:iconTint="#E53935"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:cornerRadius="20dp"
-                app:strokeWidth="0dp"
-                app:elevation="0dp"
-                android:backgroundTint="#FFFFFF" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="#FFFFFF"
-            android:layout_marginBottom="28dp">
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:paddingBottom="100dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="28dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#F6FF82">
-
-                    <LinearLayout
+                    app:cardBackgroundColor="#FFD6C9">
+                    <TextView
+                        android:id="@+id/tvAvatarInitial"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:paddingVertical="32dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="SHOP BALANCE"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.05"
-                            android:alpha="0.7"
-                            android:textColor="#0F172A" />
-
-                        <TextView
-                            android:id="@+id/tvShopBalance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="₹ 60,000"
-                            android:textSize="42sp"
-                            android:textStyle="bold"
-                            android:textColor="#0F172A"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="L"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="#BF360C"/>
                 </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome back,"
+                        android:textSize="12sp"
+                        android:textColor="#6B7280" />
+
+                    <TextView
+                        android:id="@+id/tvHeaderName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hi, User!"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#0F172A" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogout"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    app:icon="@android:drawable/ic_lock_power_off"
+                    app:iconTint="#E53935"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:cornerRadius="20dp"
+                    app:strokeWidth="0dp"
+                    app:elevation="0dp"
+                    android:backgroundTint="#FFFFFF" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvShopBalanceContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="32dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:layout_marginBottom="28dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="#F6FF82">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal"
+                            android:paddingVertical="32dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SHOP BALANCE"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05"
+                                android:alpha="0.7"
+                                android:textColor="#0F172A" />
+
+                            <TextView
+                                android:id="@+id/tvShopBalance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="₹ ..."
+                                android:textSize="42sp"
+                                android:textStyle="bold"
+                                android:textColor="#0F172A"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAddBalance"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:insetLeft="0dp"
-                            android:insetRight="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@android:drawable/ic_input_add"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconTint="#374151"
-                            android:backgroundTint="#FFFFFF"
-                            app:strokeWidth="0dp"
-                            app:elevation="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Add"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#0F172A"/>
-                    </LinearLayout>
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnAddBalance"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="28dp"
+                                app:icon="@android:drawable/ic_input_add"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconTint="#374151"
+                                android:backgroundTint="#FFFFFF"
+                                app:strokeWidth="0dp"
+                                app:elevation="4dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#0F172A"/>
+                        </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnIn"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:insetLeft="0dp"
-                            android:insetRight="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@drawable/ic_arrow_up"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconTint="#374151"
-                            android:backgroundTint="#FFFFFF"
-                            app:strokeWidth="0dp"
-                            app:elevation="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="IN"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#0F172A"/>
-                    </LinearLayout>
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnIn"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="28dp"
+                                app:icon="@drawable/ic_arrow_up"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconTint="#374151"
+                                android:backgroundTint="#FFFFFF"
+                                app:strokeWidth="0dp"
+                                app:elevation="4dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="IN"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#0F172A"/>
+                        </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMainTransactions"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:insetLeft="0dp"
-                            android:insetRight="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@drawable/ic_history"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconTint="#374151"
-                            android:backgroundTint="#FFFFFF"
-                            app:strokeWidth="0dp"
-                            app:elevation="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="History"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#0F172A"/>
-                    </LinearLayout>
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMainTransactions"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="28dp"
+                                app:icon="@drawable/ic_history"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconTint="#374151"
+                                android:backgroundTint="#FFFFFF"
+                                app:strokeWidth="0dp"
+                                app:elevation="4dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="History"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#0F172A"/>
+                        </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnOut"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:insetLeft="0dp"
-                            android:insetRight="0dp"
-                            app:cornerRadius="32dp"
-                            app:icon="@drawable/ic_arrow_down"
-                            app:iconGravity="textStart"
-                            app:iconPadding="0dp"
-                            app:iconTint="#374151"
-                            android:backgroundTint="#FFFFFF"
-                            app:strokeWidth="0dp"
-                            app:elevation="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="OUT"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#0F172A"/>
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnOut"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:insetLeft="0dp"
+                                android:insetRight="0dp"
+                                app:cornerRadius="28dp"
+                                app:icon="@drawable/ic_arrow_down"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconTint="#374151"
+                                android:backgroundTint="#FFFFFF"
+                                app:strokeWidth="0dp"
+                                app:elevation="4dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="OUT"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#0F172A"/>
+                        </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddPersonalExpense"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Add Personal Expense"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#8200FF"
+                app:cornerRadius="30dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconTint="#FFFFFF"
+                app:iconGravity="textStart"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGrocery"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Grocery List"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#2E7D32"
+                app:cornerRadius="30dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_shopping_cart"
+                app:iconTint="#FFFFFF"
+                app:iconGravity="textStart"
+                android:layout_marginBottom="28dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutUsersHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Users"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#0F172A" />
+
+                <ImageView
+                    android:id="@+id/btnWhitelistUser"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_input_add"
+                    app:tint="#8200FF"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddPersonalExpense"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Add Personal Expense"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#8200FF"
-            app:cornerRadius="30dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconTint="#FFFFFF"
-            app:iconGravity="textStart"
-            android:layout_marginBottom="28dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Users"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#0F172A"
-            android:layout_marginBottom="8dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvUsers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false" />
-
-    </LinearLayout>
-</ScrollView>
-
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
