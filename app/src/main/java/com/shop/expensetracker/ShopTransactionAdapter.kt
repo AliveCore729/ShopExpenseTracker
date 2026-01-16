@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.NumberFormat // ✅ Added Import
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,8 +29,12 @@ class ShopTransactionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val txn = list[position]
 
-        // Set text values
-        holder.tvAmount.text = "₹${txn.amount}"
+        // ✅ 1. FORMATTING: Indian Rupee System
+        val formatter = NumberFormat.getInstance(Locale("en", "IN"))
+        val formattedAmount = formatter.format(txn.amount)
+
+        // Set text values with formatted amount
+        holder.tvAmount.text = "₹$formattedAmount"
         holder.tvType.text = txn.type
         holder.tvUser.text = "By: ${txn.userName}"
 
@@ -39,7 +44,7 @@ class ShopTransactionAdapter(
             holder.tvDate.text = sdf.format(it.toDate())
         }
 
-        // ✅ COLOR LOGIC ADDED HERE
+        // ✅ COLOR LOGIC
         if (txn.type == "IN") {
             // GREEN for IN
             val greenColor = android.graphics.Color.parseColor("#2E7D32")

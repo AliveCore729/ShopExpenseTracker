@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.NumberFormat // ✅ Added Import
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,12 +29,18 @@ class UserTransactionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val txn = list[position]
 
-        // Title (Sent to / Received from / Personal / Shop)
+        // Title
         holder.tvTitle.text = txn.title
 
-        // Amount formatting
+        // ✅ Amount formatting with Indian Commas
         val sign = if (txn.isCredit) "+" else "-"
-        holder.tvAmount.text = "$sign₹${txn.amount}"
+
+        // 1. Create formatter for India
+        val formatter = NumberFormat.getInstance(Locale("en", "IN"))
+        // 2. Format the amount (e.g., 20000 -> 20,000)
+        val formattedAmount = formatter.format(txn.amount)
+
+        holder.tvAmount.text = "$sign₹$formattedAmount"
 
         // Color coding
         if (txn.isCredit) {

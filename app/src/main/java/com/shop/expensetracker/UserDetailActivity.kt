@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.NumberFormat // ✅ Added Import
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,12 +68,15 @@ class UserDetailActivity : AppCompatActivity() {
         }
     }
 
-    // 🔹 LIVE BALANCE
+    // 🔹 LIVE BALANCE (Updated with Indian Commas)
     private fun loadUserBalance() {
         db.collection("users").document(userId)
             .addSnapshotListener { snap, _ ->
                 val bal = snap?.getLong("balance") ?: 0
-                tvUserBalance.text = "Balance: ₹$bal"
+
+                // ✅ CHANGED: Added Indian Number Format
+                val formatter = NumberFormat.getInstance(Locale("en", "IN"))
+                tvUserBalance.text = "Balance: ₹" + formatter.format(bal)
             }
     }
 

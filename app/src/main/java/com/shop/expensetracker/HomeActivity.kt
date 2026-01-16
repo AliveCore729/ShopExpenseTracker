@@ -14,7 +14,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-
+import java.text.NumberFormat
+import java.util.Locale
 class HomeActivity : AppCompatActivity() {
 
     // ⚠️ IMPORTANT: REPLACE THIS WITH YOUR REAL GMAIL ADDRESS
@@ -380,7 +381,10 @@ class HomeActivity : AppCompatActivity() {
         db.collection("shop").document("main")
             .addSnapshotListener { snapshot, _ ->
                 val balance = snapshot?.getLong("balance") ?: 0
-                tvShopBalance.text = "₹ $balance"
+
+                // ✅ FORMATTING: Indian Rupee System (1,00,000)
+                val formatter = NumberFormat.getInstance(Locale("en", "IN"))
+                tvShopBalance.text = "₹ " + formatter.format(balance)
             }
     }
 
