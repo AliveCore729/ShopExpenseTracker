@@ -164,36 +164,57 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     // 🔁 TRANSFER LOGIC (UNCHANGED)
+    // 🔁 REPLACED: New Custom Transfer Dialog
     private fun showTransferDialog() {
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(32, 16, 32, 16)
+        // Inflate the custom layout
+        val dialogView = android.view.LayoutInflater.from(this).inflate(R.layout.dialog_transfer_money, null)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setView(dialogView)
+        val dialog = builder.create()
+
+        // Transparent background so rounded corners show correctly
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        // Initialize Views from the custom layout
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
+        val etAmount = dialogView.findViewById<EditText>(R.id.etTransferAmount)
+        val etReason = dialogView.findViewById<EditText>(R.id.etTransferReason)
+        val btnCancel = dialogView.findViewById<android.widget.Button>(R.id.btnCancelTransfer)
+        val btnTransfer = dialogView.findViewById<android.widget.Button>(R.id.btnConfirmTransfer)
+
+        // Set the title dynamically
+        tvTitle.text = "Transfer to $userName"
+
+        // Focus the amount field automatically
+        etAmount.requestFocus()
+
+        // Button Click Listeners
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
         }
 
-        val etAmount = EditText(this).apply {
-            hint = "Amount"
-            inputType = InputType.TYPE_CLASS_NUMBER
-        }
+        btnTransfer.setOnClickListener {
+            val amountStr = etAmount.text.toString().trim()
+            val reason = etReason.text.toString().trim()
 
-        val etReason = EditText(this).apply {
-            hint = "Reason"
-        }
-
-        layout.addView(etAmount)
-        layout.addView(etReason)
-
-        AlertDialog.Builder(this)
-            .setTitle("Transfer to $userName")
-            .setView(layout)
-            .setPositiveButton("Transfer") { _, _ ->
-                if (etAmount.text.isEmpty() || etReason.text.isEmpty()) {
-                    toast("Fill all fields")
-                    return@setPositiveButton
-                }
-                transferMoney(etAmount.text.toString().toLong(), etReason.text.toString())
+            if (amountStr.isEmpty() || reason.isEmpty()) {
+                toast("Please fill all fields")
+                return@setOnClickListener
             }
-            .setNegativeButton("Cancel", null)
-            .show()
+
+            val amount = amountStr.toLongOrNull()
+            if (amount == null || amount <= 0) {
+                toast("Enter a valid amount")
+                return@setOnClickListener
+            }
+
+            // Call the existing transfer logic
+            transferMoney(amount, reason)
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun transferMoney(amount: Long, reason: String) {
