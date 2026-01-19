@@ -9,9 +9,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopExpenseTracker">
         <activity
-            android:name=".GroceryActivity"
+            android:name=".MasterListActivity"
             android:exported="false" />
-        <!-- LOGIN (ENTRY POINT) -->
+        <activity
+            android:name=".GroceryActivity"
+            android:exported="false" /> <!-- LOGIN (ENTRY POINT) -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
