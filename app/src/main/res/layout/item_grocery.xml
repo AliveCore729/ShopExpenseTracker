@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
@@ -26,20 +27,44 @@
                 android:id="@+id/tvGroceryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Item Name"
+                tools:text="Item Name"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#0F172A"
                 android:fontFamily="@font/poppins_medium"/>
 
-            <TextView
-                android:id="@+id/tvAddedBy"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Added by..."
-                android:textSize="12sp"
-                android:textColor="#64748B"
-                android:fontFamily="@font/poppins_regular"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:id="@+id/tvAddedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Added by..."
+                    android:textSize="12sp"
+                    android:textColor="#64748B"
+                    android:fontFamily="@font/poppins_regular"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" • "
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp"
+                    android:layout_marginHorizontal="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="19 Jan"
+                    android:textSize="12sp"
+                    android:textColor="#64748B"
+                    android:fontFamily="@font/poppins_regular"/>
+            </LinearLayout>
         </LinearLayout>
 
         <ImageView

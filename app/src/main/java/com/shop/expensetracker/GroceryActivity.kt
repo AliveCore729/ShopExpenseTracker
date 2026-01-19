@@ -52,18 +52,20 @@ class GroceryActivity : AppCompatActivity() {
                 itemList.clear()
                 snapshot?.forEach { doc ->
                     try {
-                        // ✅ MANUAL SAFE MAPPING (Prevents the crash)
                         val id = doc.id
                         val name = doc.getString("name") ?: ""
                         val addedBy = doc.getString("addedBy") ?: ""
                         val isDone = doc.getBoolean("isDone") ?: false
-                        val timestamp = doc.getTimestamp("timestamp")
+
+                        // ✅ CHANGE THIS LINE (Add '?: Timestamp.now()')
+                        // This fixes the missing date issue by using phone time while waiting for server
+                        val timestamp = doc.getTimestamp("timestamp") ?: Timestamp.now()
+
                         val completedTimestamp = doc.getTimestamp("completedTimestamp")
 
                         val item = GroceryItem(id, name, addedBy, isDone, timestamp, completedTimestamp)
                         itemList.add(item)
                     } catch (e: Exception) {
-                        // If one item fails, just skip it. Don't crash the whole list.
                         e.printStackTrace()
                     }
                 }

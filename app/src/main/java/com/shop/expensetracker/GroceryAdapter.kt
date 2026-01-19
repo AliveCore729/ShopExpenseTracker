@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class GroceryAdapter(
     private val items: List<GroceryItem>,
@@ -16,6 +18,7 @@ class GroceryAdapter(
     class GroceryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tvGroceryName)
         val tvAddedBy: TextView = view.findViewById(R.id.tvAddedBy)
+        val tvDate: TextView = view.findViewById(R.id.tvDate)
         val ivDone: ImageView = view.findViewById(R.id.ivDone)
     }
 
@@ -29,20 +32,26 @@ class GroceryAdapter(
         holder.tvName.text = item.name
         holder.tvAddedBy.text = "Added by ${item.addedBy}"
 
+        // ✅ UPDATED: Format Date & Time (e.g., "19 Jan, 07:30 PM")
+        if (item.timestamp != null) {
+            val date = item.timestamp.toDate()
+            val sdf = SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault())
+            holder.tvDate.text = sdf.format(date)
+            holder.tvDate.visibility = View.VISIBLE
+        } else {
+            holder.tvDate.visibility = View.GONE
+        }
+
         // Set initial state
         updateIconState(holder, item.isDone)
 
         holder.ivDone.setOnClickListener {
-            // 1. Instant Visual Feedback (User sees change immediately)
             val newStatus = !item.isDone
             updateIconState(holder, newStatus)
-
-            // 2. Send to Database
             onCheckClick(item)
         }
     }
 
-    // Helper function to swap colors
     private fun updateIconState(holder: GroceryViewHolder, isDone: Boolean) {
         if (isDone) {
             holder.ivDone.setImageResource(R.drawable.shape_circle_checked)

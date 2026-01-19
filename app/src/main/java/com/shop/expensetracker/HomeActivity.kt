@@ -22,7 +22,8 @@ class HomeActivity : AppCompatActivity() {
     // ✅ 1. CHANGED: Single Email -> List of Admins
     private val ADMIN_EMAILS = listOf(
         "vilasksable@gmail.com",
-        "joker72096@gmail.com"
+        "joker72096@gmail.com",
+        "pawanhingane@gmail.com"
     )
 
     private val db = FirebaseFirestore.getInstance()
