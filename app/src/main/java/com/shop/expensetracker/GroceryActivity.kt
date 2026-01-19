@@ -26,7 +26,8 @@ class GroceryActivity : AppCompatActivity() {
     // ✅ Admin List (Must match other files)
     private val ADMIN_EMAILS = listOf(
         "vilasksable@gmail.com",
-        "joker72096@gmail.com"
+        "joker72096@gmail.com",
+        "pawanhingane@gmail.com"
     )
 
     private val db = FirebaseFirestore.getInstance()

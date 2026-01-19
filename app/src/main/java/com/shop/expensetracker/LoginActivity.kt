@@ -13,10 +13,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging // ✅ Added Import
 
 class LoginActivity : AppCompatActivity() {
 
-    // ✅ CHANGED: Single Email -> List of Admins
     private val ADMIN_EMAILS = listOf(
         "vilasksable@gmail.com",
         "joker72096@gmail.com",
@@ -79,7 +79,6 @@ class LoginActivity : AppCompatActivity() {
     private fun checkWhitelistAndProceed(user: FirebaseUser) {
         val email = user.email ?: ""
 
-        // ✅ CHANGED: Check if email is in the list
         if (email in ADMIN_EMAILS) {
             checkUserRegistration(user)
             return
@@ -105,22 +104,18 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient.signOut()
     }
 
-    // ✅ UPDATED: Added a final check to see if the user profile still exists
     private fun checkUserRegistration(user: FirebaseUser) {
         db.collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    // User is valid and exists in DB
+                    // ✅ User exists: Update Notification Token & Go Home
+                    updateFcmToken()
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 } else {
-                    // NEW user (or a user whose DB profile was deleted)
-                    // We only send them to Name Setup if they are whitelisted or Boss
+                    // New user or deleted profile
                     val email = user.email ?: ""
-
-                    // Re-check whitelist for safety before allowing Name Setup
                     db.collection("whitelisted_users").document(email).get().addOnSuccessListener { whiteDoc ->
-                        // ✅ CHANGED: Check if email is in the list
                         if (whiteDoc.exists() || email in ADMIN_EMAILS) {
                             startActivity(Intent(this, GoogleNameActivity::class.java))
                             finish()
@@ -133,23 +128,38 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    // ✅ UPDATED: Auto-login now verifies if the account is still in the DB
     override fun onStart() {
         super.onStart()
         val user = auth.currentUser
         if (user != null) {
-            // Don't just go to HomeActivity; verify they still exist in DB first
             db.collection("users").document(user.uid).get().addOnSuccessListener { doc ->
                 if (doc.exists()) {
+                    // ✅ Auto-login: Update Notification Token & Go Home
+                    updateFcmToken()
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                 } else {
-                    // If DB record is gone, force log out
                     performLogout()
                 }
             }
+        }
+    }
+
+    // ✅ NEW FUNCTION: Saves the notification token to Firestore
+    private fun updateFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) return@addOnCompleteListener
+
+            val token = task.result
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@addOnCompleteListener
+
+            // 1. Save individual token (for personal money transfers)
+            db.collection("users").document(uid).update("fcmToken", token)
+
+            // 2. Subscribe to general topic (for grocery updates)
+            FirebaseMessaging.getInstance().subscribeToTopic("grocery_updates")
         }
     }
 }
