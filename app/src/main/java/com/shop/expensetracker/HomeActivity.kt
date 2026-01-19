@@ -16,10 +16,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
+
 class HomeActivity : AppCompatActivity() {
 
-    // ⚠️ IMPORTANT: REPLACE THIS WITH YOUR REAL GMAIL ADDRESS
-    private val BOSS_EMAIL = "joker72096@gmail.com"
+    // ✅ 1. CHANGED: Single Email -> List of Admins
+    private val ADMIN_EMAILS = listOf(
+        "vilasksable@gmail.com",
+        "joker72096@gmail.com"
+    )
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -40,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var btnLogout: View
     private lateinit var btnAddPersonalExpense: View
     private lateinit var btnWhitelistUser: View
-    private lateinit var btnGrocery: View // ✅ New Grocery Button
+    private lateinit var btnGrocery: View
 
     private val userList = mutableListOf<User>()
     private lateinit var adapter: UserAdapter
@@ -68,7 +72,7 @@ class HomeActivity : AppCompatActivity() {
         btnLogout = findViewById(R.id.btnLogout)
         btnAddPersonalExpense = findViewById(R.id.btnAddPersonalExpense)
         btnWhitelistUser = findViewById(R.id.btnWhitelistUser)
-        btnGrocery = findViewById(R.id.btnGrocery) // ✅ Initialize
+        btnGrocery = findViewById(R.id.btnGrocery)
 
         // 2. Check User Role & Setup UI (Boss vs Staff vs User)
         checkUserRoleAndSetupUI()
@@ -106,7 +110,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, AddPersonalExpenseActivity::class.java))
         }
 
-        // ✅ Grocery Button Action
         btnGrocery.setOnClickListener {
             startActivity(Intent(this, GroceryActivity::class.java))
         }
@@ -122,7 +125,9 @@ class HomeActivity : AppCompatActivity() {
     // 🔹 Logic to Determine Role
     private fun checkUserRoleAndSetupUI() {
         val email = auth.currentUser?.email ?: ""
-        isAdmin = (email == BOSS_EMAIL)
+
+        // ✅ 2. CHANGED: Check if email is in the Admin List
+        isAdmin = (email in ADMIN_EMAILS)
 
         if (isAdmin) {
             setupAdminView()
@@ -136,9 +141,9 @@ class HomeActivity : AppCompatActivity() {
                     val isStaff = doc.getBoolean("isStaff") ?: false
 
                     if (isStaff) {
-                        setupStaffView() // 🔒 HIDE EVERYTHING
+                        setupStaffView()
                     } else {
-                        setupNormalUserView() // Show balance but hide admin buttons
+                        setupNormalUserView()
                         fetchUserDetails()
                         loadShopBalance()
                         loadUsers()
@@ -214,7 +219,7 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
-    // 🔹 Whitelist Dialog (Updated with Staff Checkbox)
+    // 🔹 Whitelist Dialog
     private fun showWhitelistDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_whitelist_user, null)
         val builder = AlertDialog.Builder(this).setView(dialogView)
@@ -222,7 +227,7 @@ class HomeActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val etEmail = dialogView.findViewById<EditText>(R.id.etWhitelistEmail)
-        val cbIsStaff = dialogView.findViewById<CheckBox>(R.id.cbIsStaff) // ✅ Checkbox
+        val cbIsStaff = dialogView.findViewById<CheckBox>(R.id.cbIsStaff)
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirmAdd)
 
@@ -235,8 +240,9 @@ class HomeActivity : AppCompatActivity() {
             if (email.isNotEmpty()) {
                 val data = hashMapOf(
                     "email" to email,
-                    "addedBy" to BOSS_EMAIL,
-                    "isStaff" to isStaff, // ✅ Save Role
+                    // ✅ 3. CHANGED: Save the current Admin's email, not the hardcoded string
+                    "addedBy" to (auth.currentUser?.email ?: "Admin"),
+                    "isStaff" to isStaff,
                     "timestamp" to FieldValue.serverTimestamp()
                 )
                 db.collection("whitelisted_users").document(email).set(data)
@@ -382,7 +388,6 @@ class HomeActivity : AppCompatActivity() {
             .addSnapshotListener { snapshot, _ ->
                 val balance = snapshot?.getLong("balance") ?: 0
 
-                // ✅ FORMATTING: Indian Rupee System (1,00,000)
                 val formatter = NumberFormat.getInstance(Locale("en", "IN"))
                 tvShopBalance.text = "₹ " + formatter.format(balance)
             }

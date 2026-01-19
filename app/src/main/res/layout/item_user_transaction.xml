@@ -48,8 +48,9 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="#0F172A"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+                android:maxLines="10"
+                android:singleLine="false"
+                android:ellipsize="none"/>
 
             <TextView
                 android:id="@+id/tvTime"

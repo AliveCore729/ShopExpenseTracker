@@ -16,7 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
-    private val BOSS_EMAIL = "joker72096@gmail.com"
+    // ✅ CHANGED: Single Email -> List of Admins
+    private val ADMIN_EMAILS = listOf(
+        "vilasksable@gmail.com",
+        "joker72096@gmail.com"
+    )
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -74,7 +78,8 @@ class LoginActivity : AppCompatActivity() {
     private fun checkWhitelistAndProceed(user: FirebaseUser) {
         val email = user.email ?: ""
 
-        if (email == BOSS_EMAIL) {
+        // ✅ CHANGED: Check if email is in the list
+        if (email in ADMIN_EMAILS) {
             checkUserRegistration(user)
             return
         }
@@ -114,7 +119,8 @@ class LoginActivity : AppCompatActivity() {
 
                     // Re-check whitelist for safety before allowing Name Setup
                     db.collection("whitelisted_users").document(email).get().addOnSuccessListener { whiteDoc ->
-                        if (whiteDoc.exists() || email == BOSS_EMAIL) {
+                        // ✅ CHANGED: Check if email is in the list
+                        if (whiteDoc.exists() || email in ADMIN_EMAILS) {
                             startActivity(Intent(this, GoogleNameActivity::class.java))
                             finish()
                         } else {

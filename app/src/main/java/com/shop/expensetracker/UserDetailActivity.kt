@@ -18,6 +18,12 @@ import java.util.*
 
 class UserDetailActivity : AppCompatActivity() {
 
+    // ✅ ADDED: List of Admins (Matches LoginActivity)
+    private val ADMIN_EMAILS = listOf(
+        "vilasksable@gmail.com",
+        "joker72096@gmail.com"
+    )
+
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
