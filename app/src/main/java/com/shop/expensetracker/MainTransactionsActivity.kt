@@ -22,7 +22,8 @@ class MainTransactionsActivity : AppCompatActivity() {
     private val ADMIN_EMAILS = listOf(
         "vilasksable@gmail.com",
         "joker72096@gmail.com",
-        "pawanhingane@gmail.com"
+        "pawanhingane@gmail.com",
+        "arjunasable@gmail.com"
     )
 
     private val db = FirebaseFirestore.getInstance()
