@@ -18,19 +18,16 @@ import com.google.firebase.firestore.Query
 
 class MainTransactionsActivity : AppCompatActivity() {
 
-    // ✅ List of Admins
-    private val ADMIN_EMAILS = listOf(
-        "vilasksable@gmail.com",
-        "joker72096@gmail.com",
-        "pawanhingane@gmail.com",
-        "arjunasable@gmail.com"
-    )
+    // ✅ Removed the hardcoded ADMIN_EMAILS list
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val list = mutableListOf<ShopTransaction>()
     private lateinit var adapter: ShopTransactionAdapter
     private lateinit var rv: RecyclerView
+
+    // ✅ Added a flag to securely hold the admin status for smooth swiping
+    private var isAdmin = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +39,25 @@ class MainTransactionsActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
 
+        // ✅ Verify admin status in the background when the screen opens
+        checkAdminStatus()
+
         // ✅ Enable Swipe to Delete
         setupSwipeToDelete()
 
         loadTransactions()
+    }
+
+    // 🔹 NEW FUNCTION: Checks Firestore to see if user is an admin
+    private fun checkAdminStatus() {
+        val email = auth.currentUser?.email ?: return
+        db.collection("admins").document(email).get()
+            .addOnSuccessListener { document ->
+                isAdmin = document.exists()
+            }
+            .addOnFailureListener {
+                isAdmin = false
+            }
     }
 
     private fun loadTransactions() {
@@ -76,10 +88,9 @@ class MainTransactionsActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val txn = list[position]
-                val currentUserEmail = auth.currentUser?.email
 
-                // 🔒 Security Check: Only Admins can delete
-                if (currentUserEmail !in ADMIN_EMAILS) {
+                // 🔒 Security Check: Check the dynamically loaded admin flag
+                if (!isAdmin) {
                     Toast.makeText(this@MainTransactionsActivity, "Only Admins can delete transactions", Toast.LENGTH_SHORT).show()
                     adapter.notifyItemChanged(position) // Snap back
                     return

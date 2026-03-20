@@ -13,16 +13,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging // ✅ Added Import
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity : AppCompatActivity() {
 
-    private val ADMIN_EMAILS = listOf(
-        "vilasksable@gmail.com",
-        "joker72096@gmail.com",
-        "pawanhingane@gmail.com",
-        "arjunasable@gmail.com"
-    )
+    // ✅ Removed the hardcoded ADMIN_EMAILS list
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -80,23 +75,32 @@ class LoginActivity : AppCompatActivity() {
     private fun checkWhitelistAndProceed(user: FirebaseUser) {
         val email = user.email ?: ""
 
-        if (email in ADMIN_EMAILS) {
-            checkUserRegistration(user)
-            return
-        }
-
-        db.collection("whitelisted_users").document(email).get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    checkUserRegistration(user)
+        // ✅ 1. Check if user is in the 'admins' database collection
+        db.collection("admins").document(email).get()
+            .addOnSuccessListener { adminDoc ->
+                if (adminDoc.exists()) {
+                    // User is an Admin
+                    checkUserRegistration(user, isAdmin = true)
                 } else {
-                    performLogout()
-                    Toast.makeText(this, "Access Denied: You are not authorized.", Toast.LENGTH_LONG).show()
+                    // ✅ 2. Not an Admin, check if in 'whitelisted_users'
+                    db.collection("whitelisted_users").document(email).get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                checkUserRegistration(user, isAdmin = false)
+                            } else {
+                                performLogout()
+                                Toast.makeText(this, "Access Denied: You are not authorized.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        .addOnFailureListener {
+                            performLogout()
+                            Toast.makeText(this, "Verification failed. Try again.", Toast.LENGTH_SHORT).show()
+                        }
                 }
             }
             .addOnFailureListener {
                 performLogout()
-                Toast.makeText(this, "Verification failed. Try again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Admin check failed. Try again.", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -105,7 +109,8 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient.signOut()
     }
 
-    private fun checkUserRegistration(user: FirebaseUser) {
+    // ✅ Updated to receive 'isAdmin' to avoid unnecessary secondary checks
+    private fun checkUserRegistration(user: FirebaseUser, isAdmin: Boolean) {
         db.collection("users").document(user.uid).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
@@ -115,14 +120,19 @@ class LoginActivity : AppCompatActivity() {
                     finish()
                 } else {
                     // New user or deleted profile
-                    val email = user.email ?: ""
-                    db.collection("whitelisted_users").document(email).get().addOnSuccessListener { whiteDoc ->
-                        if (whiteDoc.exists() || email in ADMIN_EMAILS) {
-                            startActivity(Intent(this, GoogleNameActivity::class.java))
-                            finish()
-                        } else {
-                            performLogout()
-                            Toast.makeText(this, "Your account profile was removed.", Toast.LENGTH_SHORT).show()
+                    if (isAdmin) {
+                        startActivity(Intent(this, GoogleNameActivity::class.java))
+                        finish()
+                    } else {
+                        val email = user.email ?: ""
+                        db.collection("whitelisted_users").document(email).get().addOnSuccessListener { whiteDoc ->
+                            if (whiteDoc.exists()) {
+                                startActivity(Intent(this, GoogleNameActivity::class.java))
+                                finish()
+                            } else {
+                                performLogout()
+                                Toast.makeText(this, "Your account profile was removed.", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }

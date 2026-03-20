@@ -1,15 +1,15 @@
 package com.shop.expensetracker
 
 import android.app.AlertDialog
-import android.content.Intent // ✅ Added
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.View // ✅ Added
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.ImageView // ✅ Added
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,13 +23,7 @@ import com.google.firebase.firestore.Query
 
 class GroceryActivity : AppCompatActivity() {
 
-    // ✅ Admin List (Must match other files)
-    private val ADMIN_EMAILS = listOf(
-        "vilasksable@gmail.com",
-        "joker72096@gmail.com",
-        "pawanhingane@gmail.com",
-        "arjunasable@gmail.com"
-    )
+    // ✅ Removed the hardcoded ADMIN_EMAILS list
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -47,17 +41,28 @@ class GroceryActivity : AppCompatActivity() {
 
         val rvGrocery = findViewById<RecyclerView>(R.id.rvGrocery)
         val fabAdd = findViewById<FloatingActionButton>(R.id.fabAddGrocery)
-        val btnManageMaster = findViewById<ImageView>(R.id.btnManageMaster) // ✅ Find button
+        val btnManageMaster = findViewById<ImageView>(R.id.btnManageMaster)
 
-        // ✅ CHECK ADMIN STATUS
+        // ✅ Default to hidden to prevent unauthorized flashes
+        btnManageMaster.visibility = View.GONE
+
+        // ✅ CHECK ADMIN STATUS FROM FIRESTORE
         val currentUserEmail = auth.currentUser?.email
-        if (currentUserEmail in ADMIN_EMAILS) {
-            btnManageMaster.visibility = View.VISIBLE
-            btnManageMaster.setOnClickListener {
-                startActivity(Intent(this, MasterListActivity::class.java))
-            }
-        } else {
-            btnManageMaster.visibility = View.GONE
+        if (!currentUserEmail.isNullOrEmpty()) {
+            db.collection("admins").document(currentUserEmail).get()
+                .addOnSuccessListener { adminDoc ->
+                    if (adminDoc.exists()) {
+                        // User is an admin, show the button
+                        btnManageMaster.visibility = View.VISIBLE
+                        btnManageMaster.setOnClickListener {
+                            startActivity(Intent(this, MasterListActivity::class.java))
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    // If check fails, leave the button hidden
+                    btnManageMaster.visibility = View.GONE
+                }
         }
 
         adapter = GroceryAdapter(itemList) { item ->
@@ -72,9 +77,6 @@ class GroceryActivity : AppCompatActivity() {
 
         fabAdd.setOnClickListener { showAddItemDialog() }
     }
-
-    // ... (Keep all your existing functions: loadMasterList, loadGroceryItems, etc. exactly the same) ...
-    // Copy the rest of your functions from the file you sent me previously.
 
     private fun loadMasterList() {
         db.collection("master_grocery_list").addSnapshotListener { snap, _ ->

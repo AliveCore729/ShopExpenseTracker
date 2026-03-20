@@ -23,12 +23,7 @@ import java.util.*
 
 class UserDetailActivity : AppCompatActivity() {
 
-    private val ADMIN_EMAILS = listOf(
-        "vilasksable@gmail.com",
-        "joker72096@gmail.com",
-        "pawanhingane@gmail.com",
-        "arjunasable@gmail.com"
-    )
+    // ✅ Removed the hardcoded ADMIN_EMAILS list
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -44,6 +39,9 @@ class UserDetailActivity : AppCompatActivity() {
 
     private lateinit var userId: String
     private lateinit var userName: String
+
+    // ✅ Added a flag to securely hold the admin status for smooth swiping
+    private var isAdmin = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +59,6 @@ class UserDetailActivity : AppCompatActivity() {
         tvUserName.text = userName
 
         val loggedInUserId = auth.currentUser?.uid
-        val loggedInEmail = auth.currentUser?.email
 
         btnTransfer.visibility =
             if (loggedInUserId == userId) View.GONE else View.VISIBLE
@@ -70,8 +67,11 @@ class UserDetailActivity : AppCompatActivity() {
         rvTransactions.layoutManager = LinearLayoutManager(this)
         rvTransactions.adapter = adapter
 
+        // ✅ Verify admin status in the background when the screen opens
+        checkAdminStatus()
+
         // ✅ ADDED: Swipe to Delete Feature
-        setupSwipeToDelete(loggedInEmail)
+        setupSwipeToDelete()
 
         loadUserBalance()
         loadUserTransactions()
@@ -85,8 +85,20 @@ class UserDetailActivity : AppCompatActivity() {
         }
     }
 
+    // 🔹 NEW FUNCTION: Checks Firestore to see if user is an admin
+    private fun checkAdminStatus() {
+        val email = auth.currentUser?.email ?: return
+        db.collection("admins").document(email).get()
+            .addOnSuccessListener { document ->
+                isAdmin = document.exists()
+            }
+            .addOnFailureListener {
+                isAdmin = false
+            }
+    }
+
     // 🔴 UPDATED: Swipe to Delete Logic with CUSTOM UI
-    private fun setupSwipeToDelete(currentUserEmail: String?) {
+    private fun setupSwipeToDelete() {
         val swipeHandler = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
             override fun onMove(
@@ -99,8 +111,8 @@ class UserDetailActivity : AppCompatActivity() {
                 val position = viewHolder.adapterPosition
                 val txn = transactionList[position]
 
-                // 🔒 Security Check: Only Admins can delete
-                if (currentUserEmail !in ADMIN_EMAILS) {
+                // 🔒 Security Check: Check the dynamically loaded admin flag
+                if (!isAdmin) {
                     Toast.makeText(this@UserDetailActivity, "Only Admins can delete transactions", Toast.LENGTH_SHORT).show()
                     adapter.notifyItemChanged(position) // Snap back
                     return
